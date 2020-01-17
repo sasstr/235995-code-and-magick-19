@@ -181,6 +181,51 @@
   </div>
 </template>
 
+
+<script>
+  var FACTOR = 1.337;
+  var SPEED_TWO = 2;
+  var SPEED_FIVE = 5;
+  var DIVIDER_TWO = 2;
+  var DIVIDER_THREE = 3;
+
+  var fireballSize = 22;
+  var wizardSpeed = 3;
+  var wizardWidth = 70;
+
+  /** Функция возращает значение скорости фаербола в игре
+   * @param {number} left направление полёта фаербола
+   * @return {bool}
+   */
+  var getFireballSpeed = function (left) {
+    return left ? SPEED_FIVE : SPEED_TWO;
+  };
+
+  /** Функция возращает возвращает пропорциональную высоту мага
+   * @param {number} withOfWizard ширина мага
+   * @return {number}
+   */
+  var getWizardHeight = function (widthOfWizard) {
+    return FACTOR * widthOfWizard;
+  };
+
+  /** Функция возращает возвращает координату мага середины по ширина экрана
+   * @param {number} width ширина экрана
+   * @return {number}
+   */
+  var getWizardX = function (width) {
+    return (width - wizardWidth) / DIVIDER_TWO;
+  };
+
+  /** Функция возращает возвращает координату мага на две трети по высоте экрана
+   * @param {number} height высота экрана
+   * @return {number}
+   */
+  var getWizardY = function (height) {
+    return height / DIVIDER_THREE - getWizardHeight(wizardWidth) ;
+  };
+
+</script>
 <script src="js/game.js"></script>
 
 </body>
