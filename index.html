@@ -194,24 +194,24 @@
   var wizardWidth = 70;
 
   /** Функция возращает значение скорости фаербола в игре
-   * @param {number} left направление полёта фаербола
-   * @return {bool}
+   * @param {bool} left логическое значение где true это в лево
+   * @return {number} скорость файрбола
    */
   var getFireballSpeed = function (left) {
     return left ? SPEED_FIVE : SPEED_TWO;
   };
 
-  /** Функция возращает возвращает пропорциональную высоту мага
+  /** Функция возращает возвращает высоту мага
    * @param {number} withOfWizard ширина мага
-   * @return {number}
+   * @return {number} возвращает высоту мага
    */
-  var getWizardHeight = function (widthOfWizard) {
-    return FACTOR * widthOfWizard;
+  var getWizardHeight = function () {
+    return FACTOR * wizardWidth;
   };
 
   /** Функция возращает возвращает координату мага середины по ширина экрана
    * @param {number} width ширина экрана
-   * @return {number}
+   * @return {number} возвращает координату мага середины по ширина экрана
    */
   var getWizardX = function (width) {
     return (width - wizardWidth) / DIVIDER_TWO;
@@ -219,13 +219,14 @@
 
   /** Функция возращает возвращает координату мага на две трети по высоте экрана
    * @param {number} height высота экрана
-   * @return {number}
+   * @return {number} возвращает координату мага на две трети по высоте экрана
    */
   var getWizardY = function (height) {
     return height / DIVIDER_THREE - getWizardHeight(wizardWidth) ;
   };
 
 </script>
+<script src="js/stat.js"></script>
 <script src="js/game.js"></script>
 
 </body>
