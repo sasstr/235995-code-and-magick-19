@@ -80,7 +80,7 @@ var renderText = function (context, text, textCoordX, textCoordY) {
 /**
  * Функция рисует гистограмы и выводит результаты игроков и их имена
  * @param {array} arrayOfTimes массив результатов игры
- * @param {number} maximumTime максимальное время прохождения игры
+ * @param {number} maximumTime максимальное время за, которое игрок прошел игру
  * @param {number} barHeight высота гистограмы
  * @param {number} barWidth ширина гистограмы
  * @param {array} namesOfPlayer массив имен игроков
@@ -103,7 +103,7 @@ var renderBars = function (arrayOfTimes, maximumTime, barHeight, barWidth, names
     renderText(context, Math.round(time), barCoordX, barCoordY - barGap / 2);
     //  Рисуем имя текущего игрока
     renderText(context, namesOfPlayer[i], barCoordX, cloudHeight - barGap / 3);
-
+    // Получаем координату X для следующей гистограммы
     barCoordX += barGap + barWidth;
   });
 };

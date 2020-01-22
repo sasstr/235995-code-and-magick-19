@@ -183,9 +183,9 @@
 
 
 <script>
+  'use strict';
+
   var FACTOR = 1.337;
-  var SPEED_TWO = 2;
-  var SPEED_FIVE = 5;
   var DIVIDER_TWO = 2;
   var DIVIDER_THREE = 3;
 
@@ -198,7 +198,7 @@
    * @return {number} скорость файрбола
    */
   var getFireballSpeed = function (left) {
-    return left ? SPEED_FIVE : SPEED_TWO;
+    return left ? 5 : 2;
   };
 
   /** Функция возращает возвращает высоту мага
