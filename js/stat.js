@@ -1,30 +1,38 @@
 'use strict';
 
+var BAR = {
+  COORD_X: 140,
+  GAP: 50,
+  MY_PLAYER_COLOR: 'rgba(255, 0, 0, 1)',
+  HEIGTH: 150,
+  WIDTH: 40,
+};
+
 var CLOUD = {
-  WIDTH: 420,
-  HEIGHT: 270,
   COORD_X: 100,
   COORD_Y: 10,
-  GAP: 10,
-  BAR_GAP: 50,
-  BAR_COLOR: 'rgba(255, 0, 0, 1)',
-  BAR_HEIGTH: 150,
-  BAR_WIDTH: 40,
   COLOR: 'rgb(255, 255, 255)',
+  GAP: 10,
+  MY_PLAYER: 'Вы',
+  WIDTH: 420,
+  HEIGHT: 270,
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
 };
 
 var TEXT = {
-  FONT_GAP: 10,
-  FONT_SIZE: '16px',
-  FONT_FAMILY: 'PT Mono',
   BASELINE: 'hanging',
-  WIDTH: 200,
+  COLOR: '#000000',
+  COORD_X: 150,
+  COORD_Y: 30,
+  FONT_GAP: 20,
+  FONT: '16px PT Mono',
+  GAP: 100,
   FIRST_LINE: 'Ура вы победили!',
   SECOND_LINE: 'Список результатов:',
 };
 
-/** Функция возращает возвращает координату мага на две трети по высоте экрана
+/** Функция возращает наибольшее время прохождения игры
+ * @param {array} arrayOfResults Массив из результатов прохождения игры
  * @return {number} возращает наибольшее время, за которое пройдена игра
  */
 var getMaxResult = function (arrayOfResults) {
@@ -36,27 +44,64 @@ var getMaxResult = function (arrayOfResults) {
  * @return {string} цвет для текущей гистограммы
  */
 var getPlayerColor = function (name) {
-  return name === 'Вы' ? CLOUD.BAR_COLOR : 'hsl(235, 100%, ' + Math.random() * 100 + '%)';
+  return name === CLOUD.MY_PLAYER ? BAR.MY_PLAYER_COLOR : 'hsl(235, 100%, ' + Math.random() * 100 + '%)';
 };
 
 /**
  * Функция рисует прямоугольник заданного цвета
- * @param {string} color цвет 
+ * @param {string} color цвет
  * @param {number} coordX координата отступа от края холста по X
  * @param {number} coordY координата отступа от края холста по Y
- * @param {number} cloudWidth ширина облака
- * @param {number} cloudHeigth высота облака
+ * @param {number} width ширина прямоугольника
+ * @param {number} heigth высота прямоугольника
  * @param {object} context контекст конваса
  * @return {void} рисует прямоугольник заданного цвета
  */
-var renderCloud = function (color, coordX, coordY, cloudWidth, cloudHeigth, context) {
+var renderRectangle = function (color, coordX, coordY, width, heigth, context) {
   context.fillStyle = color;
-  context.fillRect(coordX, coordY, cloudWidth, cloudHeigth);
+  context.fillRect(coordX, coordY, width, heigth);
 };
 
-// Функция рисует одну строку текста
+/**
+ * Функция выводит текст одной строки
+ * @param {object} context контекст конваса
+ * @param {string} text строка, которая будет отрисована на канвасе
+ * @param {number} textCoordX координата начала текста X
+ * @param {number} textCoordY координата начала текста Y
+ * @return {void} выводит текст одной строки
+ */
+var renderText = function (context, text, textCoordX, textCoordY) {
+  context.textBaseline = TEXT.BASELINE;
+  context.fillStyle = TEXT.COLOR;
+  context.font = TEXT.FONT;
+  context.fillText(text, textCoordX, textCoordY);
+};
 
-// 
+/**
+ * Функция рисует гистограмы и выводит результаты игроков и их имена
+ * @param {array} arrayOfTimes массив результатов игры
+ * @param {number} maximumTime максимальное время прохождения игры
+ * @param {number} barHeight высота гистограмы
+ * @param {number} barWidth ширина гистограмы
+ * @param {array} namesOfPlayer массив имен игроков
+ * @param {object} context контекст конваса
+ * @param {string} barGap отступ между гистограмами
+ * @param {number} cloudHeight Высота облака
+ * @param {number} barCoordX начальная координата отрисовки первой гистограмы
+ * @return {void} рисует гистограмы и выводит результаты игроков и их имена
+ */
+var renderBars = function (arrayOfTimes, maximumTime, barHeight, barWidth, namesOfPlayer, context, barGap, cloudHeight, barCoordX) {
+
+  arrayOfTimes.forEach(function (time, i) {
+    var heightCurrentBar = Math.round((time / maximumTime) * barHeight);
+    var barCoordY = barHeight + barGap * 2 - heightCurrentBar;
+    renderRectangle(getPlayerColor(namesOfPlayer[i]), barCoordX, barCoordY, barWidth, heightCurrentBar, context);
+    renderText(context, Math.round(time), barCoordX, barCoordY - barGap / 2);
+    renderText(context, namesOfPlayer[i], barCoordX, cloudHeight - barGap / 3);
+
+    barCoordX += barGap + barWidth;
+  });
+};
 
 /** Функция отрисовывает облако с результами игры ввиде гистограмм
    * @param {object} ctx  контекст канваса
@@ -67,9 +112,13 @@ var renderCloud = function (color, coordX, coordY, cloudWidth, cloudHeigth, cont
    */
 window.renderStatistics = function (ctx, names, times) {
   // рисует тень для облака
-  renderCloud(CLOUD.SHADOW_COLOR, CLOUD.COORD_X + CLOUD.GAP, CLOUD.COORD_Y + CLOUD.GAP, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
+  renderRectangle(CLOUD.SHADOW_COLOR, CLOUD.COORD_X + CLOUD.GAP, CLOUD.COORD_Y + CLOUD.GAP, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
   // рисует облако
-  renderCloud(CLOUD.COLOR, CLOUD.COORD_X, CLOUD.COORD_Y, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
-  // получаем наибольшее время игрока
-  var maxTime = getMaxResult(times);
+  renderRectangle(CLOUD.COLOR, CLOUD.COORD_X, CLOUD.COORD_Y, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
+  // рисует первую строку заголовка
+  renderText(ctx, TEXT.FIRST_LINE, TEXT.COORD_X, TEXT.COORD_Y);
+  // рисует вторую строку заголовка
+  renderText(ctx, TEXT.SECOND_LINE, TEXT.COORD_X, TEXT.COORD_Y + TEXT.FONT_GAP);
+  // рисует гистограммы с результатами и именами участников игры
+  renderBars(times, getMaxResult(times), BAR.HEIGTH, BAR.WIDTH, names, ctx, BAR.GAP, CLOUD.HEIGHT, BAR.COORD_X);
 };
