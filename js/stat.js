@@ -14,8 +14,8 @@ var CLOUD = {
   COLOR: 'rgb(255, 255, 255)',
   GAP: 10,
   MY_PLAYER: 'Вы',
-  WIDTH: 420,
   HEIGHT: 270,
+  WIDTH: 420,
   SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
 };
 
@@ -26,8 +26,8 @@ var TEXT = {
   COORD_Y: 30,
   FONT_GAP: 20,
   FONT: '16px PT Mono',
-  GAP: 100,
   FIRST_LINE: 'Ура вы победили!',
+  GAP: 100,
   SECOND_LINE: 'Список результатов:',
 };
 
@@ -93,10 +93,15 @@ var renderText = function (context, text, textCoordX, textCoordY) {
 var renderBars = function (arrayOfTimes, maximumTime, barHeight, barWidth, namesOfPlayer, context, barGap, cloudHeight, barCoordX) {
 
   arrayOfTimes.forEach(function (time, i) {
+    // Получаем высоту текущей гистограммы
     var heightCurrentBar = Math.round((time / maximumTime) * barHeight);
+    // Получаем координату по Y для отрисовки гистограммы
     var barCoordY = barHeight + barGap * 2 - heightCurrentBar;
+    // Рисуем текущию гистограмму
     renderRectangle(getPlayerColor(namesOfPlayer[i]), barCoordX, barCoordY, barWidth, heightCurrentBar, context);
+    // Рисуем время текущего игрока
     renderText(context, Math.round(time), barCoordX, barCoordY - barGap / 2);
+    //  Рисуем имя текущего игрока
     renderText(context, namesOfPlayer[i], barCoordX, cloudHeight - barGap / 3);
 
     barCoordX += barGap + barWidth;
