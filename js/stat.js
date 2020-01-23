@@ -26,9 +26,8 @@ var TEXT = {
   COORD_Y: 30,
   FONT_GAP: 20,
   FONT: '16px PT Mono',
-  FIRST_LINE: 'Ура вы победили!',
+  HEADERS: ['Ура вы победили!', 'Список результатов:'],
   GAP: 100,
-  SECOND_LINE: 'Список результатов:',
 };
 
 /** Функция возращает наибольшее время прохождения игры
@@ -120,10 +119,10 @@ window.renderStatistics = function (ctx, names, times) {
   renderRectangle(CLOUD.SHADOW_COLOR, CLOUD.COORD_X + CLOUD.GAP, CLOUD.COORD_Y + CLOUD.GAP, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
   // рисует облако
   renderRectangle(CLOUD.COLOR, CLOUD.COORD_X, CLOUD.COORD_Y, CLOUD.WIDTH, CLOUD.HEIGHT, ctx);
-  // рисует первую строку заголовка
-  renderText(ctx, TEXT.FIRST_LINE, TEXT.COORD_X, TEXT.COORD_Y);
-  // рисует вторую строку заголовка
-  renderText(ctx, TEXT.SECOND_LINE, TEXT.COORD_X, TEXT.COORD_Y + TEXT.FONT_GAP);
+  // рисуем заголовки
+  TEXT.HEADERS.forEach(function (line, i) {
+    renderText(ctx, line, TEXT.COORD_X, TEXT.COORD_Y + TEXT.FONT_GAP * i);
+  });
   // рисует гистограммы с результатами и именами участников игры
   renderBars(times, getMaxResult(times), BAR.HEIGTH, BAR.WIDTH, names, ctx, BAR.GAP, CLOUD.HEIGHT, BAR.COORD_X);
 };
