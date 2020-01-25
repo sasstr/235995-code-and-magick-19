@@ -184,11 +184,6 @@
 
 <script>
   'use strict';
-
-  var FACTOR = 1.337;
-  var DIVIDER_TWO = 2;
-  var DIVIDER_THREE = 3;
-
   var fireballSize = 22;
   var wizardSpeed = 3;
   var wizardWidth = 70;
@@ -206,7 +201,7 @@
    * @return {number} возвращает высоту мага
    */
   var getWizardHeight = function () {
-    return FACTOR * wizardWidth;
+    return 1.337 * wizardWidth;
   };
 
   /** Функция возращает возвращает координату мага середины по ширина экрана
@@ -214,7 +209,7 @@
    * @return {number} возвращает координату мага середины по ширина экрана
    */
   var getWizardX = function (width) {
-    return (width - wizardWidth) / DIVIDER_TWO;
+    return (width - wizardWidth) / 2;
   };
 
   /** Функция возращает возвращает координату мага на две трети по высоте экрана
@@ -222,7 +217,7 @@
    * @return {number} возвращает координату мага на две трети по высоте экрана
    */
   var getWizardY = function (height) {
-    return height / DIVIDER_THREE - getWizardHeight(wizardWidth) ;
+    return height / 3;
   };
 
 </script>
