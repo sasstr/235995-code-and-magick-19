@@ -39,7 +39,7 @@ var Person = {
     'green'
   ],
 };
-
+var randomWizards = [];
 var userDialog = document.querySelector('.setup');
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
@@ -87,7 +87,6 @@ var getRandomName = function (names, surnames) {
  * @return {array} массив объектов со случайными данными для волшебников
  */
 var getRandomWizards = function (amount, personsObject) {
-  var randomWizards = [];
   for (var i = 0; i < amount; i++) {
     var wizardsName = getRandomName(personsObject['NAMES'], personsObject['SURNAMES']);
     var coatColor = getRendomItemOfArray(personsObject['COATS_COLOR']);
@@ -127,4 +126,3 @@ for (var i = 0; i < wizards.length; i++) {
 similarListElement.appendChild(fragment);
 
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
-
