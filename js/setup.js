@@ -68,13 +68,14 @@ var getRendomItemOfArray = function (array) {
 };
 
 /** Функция возращает в случайном порядке имя и фамилию
- *
+ * @param {array} names Объект имен
+ * @param {array} surnames Объект фамилий
  * @return {string} имя и фамилия в случайном порядке
  */
-var getRandomName = function () {
+var getRandomName = function (names, surnames) {
 
-  var name = getRendomItemOfArray(Person.NAMES);
-  var surname = getRendomItemOfArray(Person.SURNAMES);
+  var name = getRendomItemOfArray(names);
+  var surname = getRendomItemOfArray(surnames);
 
   return getRandomInteger(0, 2) > 1 ? name + ' ' + surname : surname + ' ' + name;
 };
@@ -82,15 +83,15 @@ var getRandomName = function () {
 /** Функция возращает массив объектов со случайными данными для волшебников
  *
  * @param {number} amount кол-во волшебников
- * @param {array} personsArray
+ * @param {object} personsObject объект
  * @return {array} массив объектов со случайными данными для волшебников
  */
-var getRandomWizards = function (amount, personsArray) {
+var getRandomWizards = function (amount, personsObject) {
   var randomWizards = [];
   for (var i = 0; i < amount; i++) {
-    var wizardsName = getRandomName(personsArray['NAMES']);
-    var coatColor = getRendomItemOfArray(personsArray['COATS_COLOR']);
-    var eyesColor = getRendomItemOfArray(personsArray['EYES_COLOR']);
+    var wizardsName = getRandomName(personsObject['NAMES'], personsObject['SURNAMES']);
+    var coatColor = getRendomItemOfArray(personsObject['COATS_COLOR']);
+    var eyesColor = getRendomItemOfArray(personsObject['EYES_COLOR']);
 
     randomWizards.push({
       name: wizardsName,
@@ -112,9 +113,9 @@ var wizards = getRandomWizards(PERSON_AMOUNT, Person);
 var renderWizard = function (wizard) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
 
-  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name.trim();
-  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor.trim();
-  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor.trim();
+  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
 
   return wizardElement;
 };
