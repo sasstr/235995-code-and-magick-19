@@ -39,7 +39,7 @@ var Person = {
     'green'
   ],
 };
-var randomWizards = [];
+
 var userDialog = document.querySelector('.setup');
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
@@ -47,8 +47,9 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .querySelector('.setup-similar-item');
 
 userDialog.classList.remove('hidden');
-/**
- * Функция возращает случайное целое число между min и max - включительно
+
+/** Функция возращает случайное целое число между min и max - включительно
+ *
  * @param {number} min минимальное число
  * @param {number} max максимальное число
  * @return {number} случайное значение в заданном диапозоне
@@ -57,8 +58,7 @@ var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-//  Функция возращает случайный элемент массива
-/**
+/** Функция возращает случайный элемент массива
  *
  * @param {array} array
  * @return {any} случайный элемент массива
@@ -68,6 +68,7 @@ var getRendomItemOfArray = function (array) {
 };
 
 /** Функция возращает в случайном порядке имя и фамилию
+ *
  * @param {array} names Объект имен
  * @param {array} surnames Объект фамилий
  * @return {string} имя и фамилия в случайном порядке
@@ -77,39 +78,46 @@ var getRandomName = function (names, surnames) {
   var name = getRendomItemOfArray(names);
   var surname = getRendomItemOfArray(surnames);
 
-  return getRandomInteger(0, 2) > 1 ? name + ' ' + surname : surname + ' ' + name;
+  return Math.floor(getRandomInteger(0, 2)) ? name + ' ' + surname : surname + ' ' + name;
+};
+
+/** Функция возращает объект с данными волшебника
+ *
+ * @param {object} wizards объект
+ * @return {object} возращает объект с данными волшебника
+ */
+var getWizard = function (wizards) {
+
+  var wizardName = getRandomName(wizards['NAMES'], wizards['SURNAMES']);
+  var coatColor = getRendomItemOfArray(wizards['COATS_COLOR']);
+  var eyesColor = getRendomItemOfArray(wizards['EYES_COLOR']);
+
+  return {
+    name: wizardName,
+    coatColor: coatColor,
+    eyesColor: eyesColor
+  };
 };
 
 /** Функция возращает массив объектов со случайными данными для волшебников
- *
- * @param {number} amount кол-во волшебников
- * @param {object} personsObject объект
+ * @param {object} wizards объект
+ * @param {number} wizardsAmount кол-во магов
  * @return {array} массив объектов со случайными данными для волшебников
  */
-var getRandomWizards = function (amount, personsObject) {
-  for (var i = 0; i < amount; i++) {
-    var wizardsName = getRandomName(personsObject['NAMES'], personsObject['SURNAMES']);
-    var coatColor = getRendomItemOfArray(personsObject['COATS_COLOR']);
-    var eyesColor = getRendomItemOfArray(personsObject['EYES_COLOR']);
-
-    randomWizards.push({
-      name: wizardsName,
-      coatColor: coatColor,
-      eyesColor: eyesColor
-    });
+var getWizards = function (wizards, wizardsAmount) {
+  var randomWizards = [];
+  for (var i = 0; i < wizardsAmount; i++) {
+    randomWizards.push(getWizard(wizards));
   }
   return randomWizards;
 };
 
-var wizards = getRandomWizards(PERSON_AMOUNT, Person);
-
-/**
- * Функция возращает элемент готовый для вставки в DOM
+/** Функция возращает элемент готовый для вставки в DOM
  *
  * @param {object} wizard объект
  * @return {element} wizard элемент готовый для вставки в DOM
  */
-var renderWizard = function (wizard) {
+var makeWizard = function (wizard) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
 
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
@@ -119,10 +127,19 @@ var renderWizard = function (wizard) {
   return wizardElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < wizards.length; i++) {
-  fragment.appendChild(renderWizard(wizards[i]));
-}
-similarListElement.appendChild(fragment);
+/** Функция добавляет в DOM магов
+ *
+ * @param {array} wizards массив с магами
+ * @return {void} wizard Функция добавляет в DOM магов
+ */
+var renderWizards = function (wizards) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < wizards.length; i++) {
+    fragment.appendChild(makeWizard(wizards[i]));
+  }
+  similarListElement.appendChild(fragment);
+};
 
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+var wizardsList = getWizards(Person, PERSON_AMOUNT);
+renderWizards(wizardsList);
+document.querySelector('.setup-similar').classList.remove('hidden');
